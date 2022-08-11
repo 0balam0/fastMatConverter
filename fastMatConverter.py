@@ -43,9 +43,9 @@ for j in tqdm(file.masterChannelList.keys()):
         if t_[2] < len(__t__):
             t_[2] = len(__t__)
 
-print(f'tempo da {t_[0]} a {t_[1]} con {t_[2]} campioni')
+print(f'tempo da {t_[0]:.1f} a {t_[1]:.1f} con {t_[2]:.0f} campioni')
 resample = inputRequest.resample_request()
-tStart, tStop = inputRequest.time_space()
+tStart, tStop = inputRequest.time_space(t_[0], t_[1])
 if tStart is not None:
     t_[0] = tStart
 if tStop is not None:
@@ -53,7 +53,7 @@ if tStop is not None:
 
 time_space = np.linspace(t_[0], t_[1], int((t_[1] - t_[0]) / resample))
 
-print(f'base tempi creata!!! da {t_[0]} a {t_[1]} con {t_[2]} campioni')
+print(f'base tempi creata!!! da {t_[0]} a {t_[1]:.1f} con {t_[2]:.1f} campioni')
 
 print('interpolazione su singola base tempi e salvataggio')
 
@@ -125,7 +125,7 @@ grop_resampled['tTH']['time']['v'] -= t_T[0]
 
 # "C:\Users\matteo.demarco\Downloads\2022-04-05 13_20_30_M182_pVP85_constant1.2_.dat\2022-04-05 13_20_30_M182_pVP85_constant1.2_.dat"
 print('Salvataggio in corso non chiudere la finestra!!!')
-savemat(folder + f'\\{file_}_{round(t_[0],2)}to{round(t_[1],2)}.mat', grop_resampled, do_compression=True, long_field_names=True)
+savemat(folder + f'\\{file_}_{round(t_[0],1)}to{round(t_[1],1)}.mat', grop_resampled, do_compression=True, long_field_names=True)
 print('Salvataggio completato correttamente.')
 winsound.Beep(frequency, duration)
 winsound.Beep(frequency, duration)

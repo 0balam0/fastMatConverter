@@ -18,10 +18,10 @@ def resample_request():
         risp = '0.05'
     return float(risp)
 
-def time_space():
+def time_space(t_start, t_stop):
     winsound.Beep(frequency, duration)
     winsound.Beep(frequency, duration)
-    risp = input('inserisci l\'intervallo di tempo, ex. 0 1589.2 (enter to default): ')
+    risp = input(f'inserisci l\'intervallo di tempo, ex. {t_start:.1f} {t_stop:.1f} (enter to default): ')
     if not len(risp):
         return None, None
     return [float(risp.split(' ')[0]), float(risp.split(' ')[1])]
