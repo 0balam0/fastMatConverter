@@ -40,7 +40,7 @@ def convert_dat2mat(folder = None, file_name = None, resample = None, tCut_input
                 t_[2] = len(__t__)
 
     print(f'tempo da {t_[0]:.1f} a {t_[1]:.1f} con {t_[2]:.0f} campioni')
-    if resample== None:
+    if resample == None:
         resample = inputRequest.resample_request()
     else:
         resample = float(resample)
@@ -51,6 +51,8 @@ def convert_dat2mat(folder = None, file_name = None, resample = None, tCut_input
             t_[0] = tStart
         if tStop is not None:
             t_[1] = tStop
+    elif len(tCut_input) == 1:
+        pass
     else:
         ris = tCut_input.strip('][ ').split(',')
         t_[0] = float(ris[0])
