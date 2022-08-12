@@ -6,26 +6,21 @@ from tqdm import tqdm
 import inputRequest
 from os.path import splitext as osSplitext
 import sys
-# import winsound
-def convert_dat2mat(folder, file_name, resample, name = ''):
-    # frequency = 2500  # Set Frequency To 2500 Hertz
-    # duration = 30  # Set Duration To 1000 ms == 1 second
-
+import winsound
+def convert_dat2mat(folder = None, file_name = None, resample = None, tCut_input = None, name_file_out = None):
     def _convert_to_matlab_name(channel_name):
         allowed_str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_'
         channel_name_mat = ''.join([i if i in allowed_str else '_' for i in channel_name])
         channel_name_mat = channel_name_mat[:62]
         return channel_name_mat
-
-
-
-    # folder , file_name = inputRequest.ricerca_file()
+    if folder == None or file_name==None:
+        folder, file_name = inputRequest.ricerca_file()
     print(f'{folder},{file_name}')
 
     # informazioni file MDF
-    # print('Caricamento informazioni..')
+    print('Caricamento informazioni..')
     info = mdfreader.MdfInfo()
-    info.read_info(folder+'\\'+file_name)
+    info.read_info(folder + '\\' + file_name)
 
     print('Apertura file...')
     file = mdfreader.Mdf(folder + '\\' + file_name, convert_after_read=True)
@@ -45,12 +40,21 @@ def convert_dat2mat(folder, file_name, resample, name = ''):
                 t_[2] = len(__t__)
 
     print(f'tempo da {t_[0]:.1f} a {t_[1]:.1f} con {t_[2]:.0f} campioni')
-    # resample = inputRequest.resample_request()
-    # tStart, tStop = inputRequest.time_space()
-    # if tStart is not None:
-    #     t_[0] = tStart
-    # if tStop is not None:
-    #     t_[1] = tStop
+    if resample== None:
+        resample = inputRequest.resample_request()
+    else:
+        resample = float(resample)
+
+    if tCut_input == None:
+        tStart, tStop = inputRequest.time_space(t_[0], t_[1])
+        if tStart is not None:
+            t_[0] = tStart
+        if tStop is not None:
+            t_[1] = tStop
+    else:
+        ris = tCut_input.strip('][ ').split(',')
+        t_[0] = float(ris[0])
+        t_[1] = float(ris[1])
 
     time_space = np.linspace(t_[0], t_[1], int((t_[1] - t_[0]) / resample))
 
@@ -65,25 +69,29 @@ def convert_dat2mat(folder, file_name, resample, name = ''):
                                 'd': 'Time Master'}}}
     # add bug in dat
     grop_resampled['tTH']['time']['v'] = np.asmatrix(grop_resampled['tTH']['time']['v'])
-    shc =grop_resampled['tTH']['time']['v'].shape
+    shc = grop_resampled['tTH']['time']['v'].shape
     if shc[0] < shc[1]:
         grop_resampled['tTH']['time']['v'] = grop_resampled['tTH']['time']['v'].transpose()
 
     errori = {}
     file_, _ = osSplitext(file_name)
-    #creazione file txt lista canali
-    file_listaCanali = open(folder + f'\\{file_}_{round(t_[0],2)}to{round(t_[1],2)}.txt',"w")
+    # creazione file txt lista canali
+    if name_file_out==None:
+        name_file_outTXT = folder + f'\\{file_}_{round(t_[0], 1)}to{round(t_[1], 1)}.txt'
+    else:
+        name_file_outTXT = name_file_out+'_NameList.txt'
+    file_listaCanali = open(name_file_outTXT, "w")
     file_listaCanali.write(f'name\tunit\t description\tmaster\tlen\tid\n')
     errori = dict()
 
     for group in tqdm(file.masterChannelList.keys()):
         # for channel in tqdm(info['allChannelList']):
         for channel in file.masterChannelList[group]:
-            if not(channel == 'time'):
+            if not (channel == 'time'):
                 time_master_name = file.get_channel_master(channel)
                 time_master = file.get(channel, {}).get('master', {})
                 if len(time_master):
-                    time_master = file.get(time_master, {}).get('data',[])
+                    time_master = file.get(time_master, {}).get('data', [])
                 else:
                     errori[channel] = 'base tempi non trovata'
                 data = file.get(channel, {}).get('data', [])
@@ -100,7 +108,7 @@ def convert_dat2mat(folder, file_name, resample, name = ''):
                             cc = 1
                             name += str(cc)
                             while name in names:
-                                name = name[:-(cc+1)]+str(cc)
+                                name = name[:-(cc + 1)] + str(cc)
                                 cc += 1
                         unit = unit if len(unit) else 'None'
                         dataInterpT = np.asmatrix(dataInterp).transpose()
@@ -115,7 +123,7 @@ def convert_dat2mat(folder, file_name, resample, name = ''):
                         Stringa_salvataggio_info += f'\n'
                         file_listaCanali.write(Stringa_salvataggio_info)
                     except:
-                        errori[channel]= '\t errore esportazione txt segnale'
+                        errori[channel] = '\t errore esportazione txt segnale'
 
                 else:
                     errori[channel] = 'dati non trovati'
@@ -123,13 +131,14 @@ def convert_dat2mat(folder, file_name, resample, name = ''):
     file_listaCanali.close()
     t_T = np.asmatrix(t_[0]).transpose()
     grop_resampled['tTH']['time']['v'] -= t_T[0]
-
+    if name_file_out == None
+        name_file_out = folder + f'\\{file_}_{round(t_[0], 1)}to{round(t_[1], 1)}.mat'
+    else:
+        name_file_out = name_file_out+'.mat'
     # "C:\Users\matteo.demarco\Downloads\2022-04-05 13_20_30_M182_pVP85_constant1.2_.dat\2022-04-05 13_20_30_M182_pVP85_constant1.2_.dat"
     print('Salvataggio in corso non chiudere la finestra!!!')
-    if not(len(name)):
-        name = folder + f'\\{file_}_{round(t_[0],2)}to{round(t_[1],2)}.mat'
-
-        savemat(name, grop_resampled, do_compression=True, long_field_names=True)
+    savemat(name_file_out, grop_resampled, do_compression=True,
+            long_field_names=True)
     print('Salvataggio completato correttamente.')
     print(f'file salvato...')
     if len(errori.keys()):
@@ -139,13 +148,10 @@ def convert_dat2mat(folder, file_name, resample, name = ''):
     return name
 
 if __name__ == "__main__":
-    print(sys.argv)
-    folder = sys.argv[1]
-    file_name = sys.argv[2]
-    resample = float(sys.argv[3])
-    if len(sys.argv)>4:
-        name = sys.argv[4]
-    else:
-        name = ''
+    s = len(sys.argv)
+    # folder = None, file_name = None, resample = None, tCut_input = None, name_file_out = None
+    opt = [None, None, None, None, None]
+    for i in range(1, s):
+        opt[i-1] = sys.argv[i]
 
-    convert_dat2mat(folder, file_name, resample, name = name)
+    convert_dat2mat(folder = opt[0], file_name = opt[1], resample = opt[2], tCut_input = opt[3], name_file_out = opt[4])
