@@ -155,5 +155,7 @@ if __name__ == "__main__":
     opt = [None, None, None, None, None]
     for i in range(1, s):
         opt[i-1] = sys.argv[i]
+        if opt[i-1] =='None':
+            opt[i - 1] = None
 
     convert_dat2mat(folder = opt[0], file_name = opt[1], resample = opt[2], tCut_input = opt[3], name_file_out = opt[4])
