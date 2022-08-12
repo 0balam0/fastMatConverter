@@ -131,7 +131,7 @@ def convert_dat2mat(folder = None, file_name = None, resample = None, tCut_input
     file_listaCanali.close()
     t_T = np.asmatrix(t_[0]).transpose()
     grop_resampled['tTH']['time']['v'] -= t_T[0]
-    if name_file_out == None
+    if name_file_out == None :
         name_file_out = folder + f'\\{file_}_{round(t_[0], 1)}to{round(t_[1], 1)}.mat'
     else:
         name_file_out = name_file_out+'.mat'
