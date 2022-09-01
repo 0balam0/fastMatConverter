@@ -159,3 +159,8 @@ if __name__ == "__main__":
             opt[i - 1] = None
 
     convert_dat2mat(folder = opt[0], file_name = opt[1], resample = opt[2], tCut_input = opt[3], name_file_out = opt[4])
+#example
+# "C:\Users\matteo.demarco\Downloads\M189_PVP251_FDCAN11_FDCAN3_FDCAN5_OMOLOGAZIONE_COAST_DOWN_MDF\M189_PVP251_FDCAN11_FDCAN3_FDCAN5_OMOLOGAZIONE_COAST_DOWN.mdf"
+# convert_dat2mat(folder = r"C:\Users\matteo.demarco\Downloads\M189_PVP251_FDCAN11_FDCAN3_FDCAN5_OMOLOGAZIONE_COAST_DOWN_MDF",
+#              file_name = "M189_PVP251_FDCAN11_FDCAN3_FDCAN5_OMOLOGAZIONE_COAST_DOWN.mdf",
+#               resample = 0.05, tCut_input = None, name_file_out = None)
