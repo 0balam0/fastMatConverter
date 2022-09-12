@@ -11,6 +11,8 @@ Comando da eseguire:
 opzioni racchiuse tra apici '
 1) per i campi che non si vogliono specificare inserire None
 
+'folder' il percorso deve terminare con \
+
 'tCut_input' vettore utilizzato dalla funzione per tagliare l'acq. può assumere valori:
     None: Richiede il tempo tramite domanda su bash
     0:    Non taglia l'acq la converte per intero
