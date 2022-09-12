@@ -154,7 +154,8 @@ if __name__ == "__main__":
     # folder = None, file_name = None, resample = None, tCut_input = None, name_file_out = None
     opt = [None, None, None, None, None]
     for i in range(1, s):
-        opt[i-1] = sys.argv[i]
+        inStr = sys.argv[i].replace("'", "")
+        opt[i-1] = inStr
         if opt[i-1] =='None':
             opt[i - 1] = None
 

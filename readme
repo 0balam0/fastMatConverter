@@ -5,23 +5,24 @@ creata funzione di conversione.
 La funzione è: convert_dat2mat(folder = None, file_name = None, resample = None, tCut_input = None, name_file_out = None):
 
 Comando da eseguire:
-    1) funFastMatConverter <folder> <file_name> <resample> <tCut_input> <name_file_out>
+    1) funFastMatConverter 'folder' 'file_name' 'resample' 'tCut_input' 'name_file_out'
     2) funFastMatConverter
 
+opzioni racchiuse tra apici '
 1) per i campi che non si vogliono specificare inserire None
 
-<tCut_input> vettore utilizzato dalla funzione per tagliare l'acq. può assumere valori:
+'tCut_input' vettore utilizzato dalla funzione per tagliare l'acq. può assumere valori:
     None: Richiede il tempo tramite domanda su bash
     0:    Non taglia l'acq la converte per intero
     [a,b]: taglia l'acq ed esporta un mat da a ad b;
 
-<name_file_out> indicare il nome del file compreso di percorso di output.
+'name_file_out' indicare il nome del file compreso di percorso di output.
     1) se viene indicato il nome, viene salvato:
         - il mat con il nome indicato
         - con nome+'_NameList.txt la lista dei nomi
     2) se non viene indicato il nome viene salvato:
-        - il mat con <folder>+<file_name>+tstart+tstop.mat
-        - la lista dei segnali con <folder>+<file_name>+tstart+tstop.txt
+        - il mat con 'folder'+'file_name'+tstart+tstop.mat
+        - la lista dei segnali con 'folder'+'file_name'+tstart+tstop.txt
 
 
 Source code: https://github.com/0balam0/fastMatConverter
