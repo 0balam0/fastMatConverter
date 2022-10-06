@@ -151,14 +151,17 @@ def convert_dat2mat(folder = None, file_name = None, resample = None, tCut_input
 
 if __name__ == "__main__":
     s = len(sys.argv)
+    # for i in sys.argv:
+    #     print(f'{i}\n')
     # folder = None, file_name = None, resample = None, tCut_input = None, name_file_out = None
+    # print('_'*10+'\n')
     opt = [None, None, None, None, None]
     for i in range(1, s):
-        inStr = sys.argv[i].replace("'", "")
-        opt[i-1] = inStr
+        opt[i-1] = sys.argv[i]
         if opt[i-1] =='None':
             opt[i - 1] = None
-
+    #     print(f'{opt[i-1]}\n')
+    # print('_' * 10 + '\n')
     convert_dat2mat(folder = opt[0], file_name = opt[1], resample = opt[2], tCut_input = opt[3], name_file_out = opt[4])
 #example
 # "C:\Users\matteo.demarco\Downloads\M189_PVP251_FDCAN11_FDCAN3_FDCAN5_OMOLOGAZIONE_COAST_DOWN_MDF\M189_PVP251_FDCAN11_FDCAN3_FDCAN5_OMOLOGAZIONE_COAST_DOWN.mdf"
